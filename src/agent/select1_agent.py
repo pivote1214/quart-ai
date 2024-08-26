@@ -1,10 +1,8 @@
 import random
-from ..game.game import Game
+from .agent import Agent
 
-class Select1Agent:
-    def __init__(self, game: Game):
-        self.game = game
 
+class Select1Agent(Agent):
     def select_position(self):
         available_positions = [(r, c) for r in range(4) for c in range(4) if self.game.board.grid[r][c] is None]
         return random.choice(available_positions)
@@ -30,10 +28,3 @@ class Select1Agent:
                 return index
         # If all pieces would cause a win, just return a random piece
         return random.randrange(len(self.game.available_pieces))
-
-    def play_turn(self):
-        # Select a random position to place the current piece
-        row, col = self.select_position()
-        # Select a random piece for the opponent
-        piece_index = self.select_piece()
-        self.game.play_turn(row, col, piece_index)

@@ -1,10 +1,7 @@
 import random
-from ..game.game import Game
+from .agent import Agent
 
-class Place1Agent:
-    def __init__(self, game: Game):
-        self.game = game
-
+class Place1Agent(Agent):
     def select_position(self):
         # Check if there is a winning position
         for r in range(4):
@@ -25,10 +22,3 @@ class Place1Agent:
 
     def select_piece(self):
         return random.randrange(len(self.game.available_pieces))
-
-    def play_turn(self):
-        # Select the best position to place the current piece
-        row, col = self.select_position()
-        # Select a random piece for the opponent
-        piece_index = self.select_piece()
-        self.game.play_turn(row, col, piece_index)
