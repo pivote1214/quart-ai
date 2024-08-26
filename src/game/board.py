@@ -1,6 +1,6 @@
 from typing import Optional
 
-from piece import Piece
+from .piece import Piece
 
 class Board:
     def __init__(self):

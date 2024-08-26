@@ -1,8 +1,8 @@
 import random
 
-from board import Board
-from game.piece import Piece
-from player import Player
+from .board import Board
+from .piece import Piece
+from .player import Player
 
 class Game:
     def __init__(self):
