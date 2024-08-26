@@ -8,3 +8,9 @@ wheels/
 
 # venv
 .venv
+
+# workspace settings
+*.code-workspace
+
+# macOS generated files
+.DS_Store
