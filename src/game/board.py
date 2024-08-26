@@ -4,7 +4,7 @@ from .piece import Piece
 
 class Board:
     def __init__(self):
-        self.grid = [[None for _ in range(4)] for _ in range(4)]
+        self.grid: list[list[Piece]] = [[None for _ in range(4)] for _ in range(4)]
 
     def place_piece(self, row: int, col: int, piece: Piece) -> None:
         if self.grid[row][col] is not None:
