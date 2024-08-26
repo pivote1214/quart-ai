@@ -6,11 +6,11 @@ class Agent(ABC):
         self.game = game
 
     @abstractmethod
-    def select_position(self):
+    def select_position(self) -> tuple[int]:
         pass
 
     @abstractmethod
-    def select_piece(self):
+    def select_piece(self) -> int:
         pass
 
     def play_turn(self) -> None:

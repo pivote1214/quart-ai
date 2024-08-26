@@ -3,7 +3,7 @@ from .agent import Agent
 
 
 class Place1Select1Agent(Agent):
-    def select_position(self):
+    def select_position(self) -> tuple[int]:
         # Check if there is a winning position
         for r in range(4):
             for c in range(4):
@@ -21,7 +21,7 @@ class Place1Select1Agent(Agent):
         available_positions = [(r, c) for r in range(4) for c in range(4) if self.game.board.grid[r][c] is None]
         return random.choice(available_positions)
 
-    def select_piece(self):
+    def select_piece(self) -> int:
         # Avoid giving a piece that would allow the opponent to win
         for index, piece in enumerate(self.game.available_pieces):
             will_cause_win = False
