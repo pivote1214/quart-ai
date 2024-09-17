@@ -1,12 +1,25 @@
+# COLORS = ['white', 'black']
+# HEIGHTS = ['high', 'low']
+# SHAPES = ['round', 'square']
+# HOLES = ['empty', 'filled']
+COLORS  = ['0', '1']
+HEIGHTS = ['0', '1']
+SHAPES  = ['0', '1']
+HOLES   = ['0', '1']
+
 class Piece:
-    def __init__(
-        self,
-        color: int, 
-        shape: int, 
-        height: int, 
-        surface: int
-        ):
-        self.color = color  # 0 for Black, 1 for White
-        self.shape = shape  # 0 for Round, 1 for Square
-        self.height = height  # 0 for Tall, 1 for Short
-        self.surface = surface  # 0 for Hollow, 1 for Solid
+    """
+    QUARTのコマを表すクラス
+    """
+    def __init__(self, color: str, height: str, shape: str, hole: str) -> None:
+        self.color = color
+        self.height = height
+        self.shape = shape
+        self.hole = hole
+
+    def attributes(self) -> list[str]:
+        return [self.color, self.height, self.shape, self.hole]
+
+    def __repr__(self) -> str:
+        
+        return f"Piece({self.color}, {self.height}, {self.shape}, {self.hole})"

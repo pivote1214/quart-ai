@@ -1,45 +1,66 @@
 import random
+from itertools import product
 
-from .board import Board
-from .piece import Piece
-from .player import Player
+from src.game.board import Board
+from src.game.piece import COLORS, HEIGHTS, HOLES, SHAPES, Piece
+from src.player.baseline import Baseline
+from src.player.player import Player
+
 
 class Game:
-    def __init__(self):
+    """
+    QUARTのゲームを表すクラス
+    """
+    def __init__(self, player1: Player, player2: Player) -> None:
         self.board = Board()
-        self.available_pieces = self.create_pieces()
-        self.selected_piece = self.available_pieces.pop(random.randrange(len(self.available_pieces)))
-        self.current_player = Player.Player1
+        self.players = [player1, player2]
+        self.available_pieces: list[Piece] = [Piece(color, height, shape, hole) 
+                                              for color, height, shape, hole in product(COLORS, HEIGHTS, SHAPES, HOLES)]
+        random.shuffle(self.available_pieces)
 
-    def create_pieces(self) -> list[Piece]:
-        pieces = []
-        for color in range(2):  # 0 (Black), 1 (White)
-            for shape in range(2):  # 0 (Round), 1 (Square)
-                for height in range(2):  # 0 (Tall), 1 (Short)
-                    for surface in range(2):  # 0 (Hollow), 1 (Solid)
-                        pieces.append(Piece(color, shape, height, surface))
-        return pieces
+    def play(self) -> None:
+        """
+        ゲームを実行します。
+        """
+        current_player_idx = 0
+        selected_piece = None
 
-    def play_turn(self, row, col, piece_index=None):
-        self.board.place_piece(row, col, self.selected_piece)
-        if piece_index is not None:
-            self.selected_piece = self.available_pieces.pop(piece_index)
-        self.current_player = Player.Player2 if self.current_player == Player.Player1 else Player.Player1
+        while True:
+            current_player = self.players[current_player_idx]
+            # other_player = self.players[1 - current_player_idx]
 
-    def is_game_over(self) -> tuple[bool, int | None]:
-        if self.board.check_winner():
-            return True, 1 if self.current_player == Player.Player2 else 2
-        elif len(self.available_pieces) == 0:
-            return True, 0
-        else:
-            return False, None
+            if selected_piece is None:
+                # ゲーム開始時に最初のプレイヤーがコマを選ぶ
+                selected_piece = current_player.select_piece(self.available_pieces)
+                self.available_pieces.remove(selected_piece)
+                print(f"{current_player.name} がコマを選択: {selected_piece}")
+                current_player_idx = 1 - current_player_idx
+                continue
 
-    def print_board(self) -> None:
-        for row in self.board.grid:
-            for cell in row:
-                if cell is None:
-                    print("None", end=" " * 6)
-                else:
-                    piece_str = f"{cell.color}-{cell.shape}-{cell.height}-{cell.surface}"
-                    print(piece_str, end=" " * (10 - len(piece_str)))
-            print()
+            # コマを配置
+            position = current_player.place_piece(self.board, selected_piece)
+            print(f"{current_player.name} がコマ {selected_piece} を位置 {position} に配置")
+            print(self.board)
+
+            # 勝利チェック
+            if self.board.check_victory():
+                print(f"{current_player.name} が『クアルト』を宣言して勝利！")
+                break
+
+            if self.board.is_full():
+                print("盤面が埋まりました。引き分けです。")
+                break
+
+            # 次のプレイヤーがコマを選ぶ
+            selected_piece = current_player.select_piece(self.available_pieces)
+            self.available_pieces.remove(selected_piece)
+            print(f"{current_player.name} が次のコマを選択: {selected_piece}")
+
+            current_player_idx = 1 - current_player_idx
+
+# ゲームの実行例
+if __name__ == "__main__":
+    player1 = Baseline(name="Baseline 1")
+    player2 = Baseline(name="Baseline 2")  # もう一人のAIを追加
+    game = Game(player1, player2)
+    game.play()
